@@ -5,7 +5,8 @@
 # 경사로가 지형 밖을 넘어가면 안됨
 # 시작 시간: 5시 35분, 종료 시간:  총 걸린 시간 1시간 30분 정도
 
-def can_install(grid: list, installed: list, row_idx: int, col_idx: int, X: int, row: bool) -> bool:
+def can_install(grid: list, installed: list, row_idx: int, 
+                col_idx: int, X: int, row: bool) -> bool:
     '''
     경사로 설치가능한지 여부 함수
     '''

@@ -17,8 +17,13 @@
 dx = [0, 0, -1, 1]
 dy = [1, -1, 0, 0]
 
-def find_min_distance(idx: int, atoms: list) -> tuple[float, int, int]:
-    
+def find_min_distance(idx: int, atoms: list) -> tuple[float, int]:
+    start_x, start_y, direction, _ = atoms[idx]
+    min_distance = 0
+    for other_idx in range(len(atoms)):
+        if other_idx != idx:
+            
+            
 
 
 T = int(input())
@@ -39,6 +44,6 @@ for t in range(1, T+1):
     disappear_atoms = [False for _ in range(N)]
     distance_to_others = []
     for idx in range(N):
-        distance, from_idx, to_idx = find_min_distance(idx, atoms)
+        distance, to_idx = find_min_distance(idx, atoms)
 
 

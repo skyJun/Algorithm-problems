@@ -20,11 +20,20 @@ dy = [1, -1, 0, 0]
 def find_min_distance(idx: int, atoms: list) -> tuple[float, int]:
     start_x, start_y, direction, _ = atoms[idx]
     min_distance = 0
-    for other_idx in range(len(atoms)):
-        if other_idx != idx:
-            
-            
+    if direction == 0:
+        # 상
+        candidates_atoms = [(atom, idx) for idx, atom in enumerate(atoms) if (atom[1] > atoms[idx][1]) and (atom[0] == atoms[idx][0]) and (atom[2] == 1)]
+    elif direction == 1:
+        # 하
+        candidates_atoms = [(atom, idx) for idx, atom in enumerate(atoms) if (atom[1] < atoms[idx][1]) and atom[0] == atoms[idx][0] and (atom[2] == 0)]
+    elif direction == 2:
+        # 좌
+        candidates_atoms = [(atom, idx) for idx, atom in enumerate(atoms) if (atom[0] > atoms[idx][0]) and atom[1] == atoms[idx][1] and (atom[2] == 3)]
+    elif direction == 3:
+        # 우
+        candidates_atoms = [(atom, idx) for idx, atom in enumerate(atoms) if (atom[0] < atoms[idx][0]) and atom[1] == atoms[idx][1] and (atom[2] == 2)]
 
+    
 
 T = int(input())
 for t in range(1, T+1):

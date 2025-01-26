@@ -49,6 +49,7 @@ for t in range(1, T+1):
     # 어느 방향으로 간다는 정보가 있을때 그 방향으로 다른 원자들간 거리를 찾기, 누구와 만나는지 기록
     # 제일 짧은 거리의 원자 인덱스만 고려
     # 거리를 찾은 이후 거리값이 가장 짧은 순으로 원자를 없애면 됨
+    #dfdfdf
 
     disappear_atoms = [False for _ in range(N)]
     distance_to_others = []

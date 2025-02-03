@@ -17,22 +17,6 @@
 dx = [0, 0, -1, 1]
 dy = [1, -1, 0, 0]
 
-def find_min_distance(idx: int, atoms: list) -> tuple[float, int]:
-    start_x, start_y, direction, _ = atoms[idx]
-    min_distance = 0
-    if direction == 0:
-        # 상
-        candidates_atoms = [(atom, idx) for idx, atom in enumerate(atoms) if (atom[1] > atoms[idx][1]) and (atom[0] == atoms[idx][0]) and (atom[2] == 1)]
-    elif direction == 1:
-        # 하
-        candidates_atoms = [(atom, idx) for idx, atom in enumerate(atoms) if (atom[1] < atoms[idx][1]) and atom[0] == atoms[idx][0] and (atom[2] == 0)]
-    elif direction == 2:
-        # 좌
-        candidates_atoms = [(atom, idx) for idx, atom in enumerate(atoms) if (atom[0] > atoms[idx][0]) and atom[1] == atoms[idx][1] and (atom[2] == 3)]
-    elif direction == 3:
-        # 우
-        candidates_atoms = [(atom, idx) for idx, atom in enumerate(atoms) if (atom[0] < atoms[idx][0]) and atom[1] == atoms[idx][1] and (atom[2] == 2)]
-
 
 T = int(input())
 for t in range(1, T+1):
@@ -45,13 +29,4 @@ for t in range(1, T+1):
     # grid를 쓸 필요가 없음
     # 원자들끼리 어느 방향으로 갔을때 누구와 만날 수 있는지 확인해야함
     # 우선순위가 있지
-    # 어느 방향으로 간다는 정보가 있을때 그 방향으로 다른 원자들간 거리를 찾기, 누구와 만나는지 기록
-    # 제일 짧은 거리의 원자 인덱스만 고려
-    # 거리를 찾은 이후 거리값이 가장 짧은 순으로 원자를 없애면 됨
-
-    disappear_atoms = [False for _ in range(N)]
-    distance_to_others = []
-    for idx in range(N):
-        distance, to_idx = find_min_distance(idx, atoms)
-
 

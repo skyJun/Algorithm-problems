@@ -30,8 +30,9 @@ def in_range(x_idx: int,
 dx = [1, 1, -1, -1]
 dy = [1, -1, -1, 1]
 
+max_count = -1
 
-def dfs(cafe_grid: list, types: set, x_idx: int, y_idx: int, before_explore: int):
+def dfs(cafe_grid: list, types: set, x_idx: int, y_idx: int, start_x: int, start_y: int, before_explore: int):
     """
     DFS 방식으로 탐색하여 디저트 투어 최대 가지수 반환하는 함수
 
@@ -40,33 +41,38 @@ def dfs(cafe_grid: list, types: set, x_idx: int, y_idx: int, before_explore: int
         types -- 현재 투어했을 때 탐색한 디저트 유형들
         x_idx -- x 좌표
         y_idx -- y 좌표
+        start_x -- 시작 x 좌표
+        start_y -- 시작 y 좌표
         before_explore -- 전 노드에서 온 탐색 방향
 
     Returns:
         len(current_types) -- 탐색했을 때 최대 가짓수, 투어를 제대로 못했을 경우 -1 반환
     """
-
-    for explore_type in range(4):
+    global max_count
+    
+    for explore_type in range(before_explore, 4): # 한번 방향을 전환한 이후에는 이전 방향으로 돌아가지 않음 -> 폐회로를 유지, 왼쪽으로 회전하는 형태 키포인트1
         next_x = x_idx + dx[explore_type]
         next_y = y_idx + dy[explore_type]
-        if abs(explore_type - before_explore) == 2:
-            # 바로 전 탐색 방향 노드로 돌아가면 이 탐색 방향은 스킵
+        
+        if next_x == start_x and next_y == start_y and len(types) >= 4:
+            # 시작점으로 돌아왔고 이때 사각형을 이루었으면 더 탐색 안해도 됨
+            max_count = max(max_count, len(types))
             continue
+        
         if in_range(next_x, next_y, len(cafe_grid)):
             # 다음 탐색이 범위 안에 있으면
             if cafe_grid[next_x][next_y] not in types:
                 # 다음 디저트 유형이 투어에 없으면
-                dfs(cafe_grid, types | {cafe_grid[next_x][next_y]}, next_x, next_y, explore_type)
-        
-
-    return -1
+                types.add(cafe_grid[next_x][next_y])
+                dfs(cafe_grid, types, next_x, next_y, start_x, start_y, explore_type)
+                types.remove(cafe_grid[next_x][next_y]) # dfs로 그 방향으로 탐색한 이후에는 한 번했으므로 다시 지움 키포인트2
 
 
 T = int(input())
 for t in range(1, T + 1):
     N = int(input())
     cafe = [[0 for _ in range(N)] for _ in range(N)]
-    result = -1
+    max_count = -1
     for idx in range(N):
         cafe[idx] = list(map(int, input().split()))
 
@@ -74,8 +80,6 @@ for t in range(1, T + 1):
         for y in range(N):
             start_x, start_y = x, y
             dessert_types = {cafe[start_x][start_y]}
-            current_result = dfs(cafe, dessert_types, start_x, start_y, 0)
-            if current_result > result:
-                result = current_result
+            dfs(cafe, dessert_types, start_x, start_y, start_x, start_y, 0)
 
-    print(f'#{t} {result}')
+    print(f'#{t} {max_count}')

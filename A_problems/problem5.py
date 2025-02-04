@@ -10,13 +10,30 @@
 # 벽돌이 없어지면 남은 벽돌은 아래로 하강
 # 최대한 많은 벽돌을 제거하려고 함
 # 남은 벽돌의 개수를 구하라 -> 남은 벽돌의 수가 최소인 것을 찾는게 목표
-import sys 
-sys.stdin = open("sample_input.txt", "r")
+# import sys 
+# sys.stdin = open("sample_input.txt", "r")
+
+class Brick:
+    def __init__(self, value):
+        self.value = value
+        self.top = False
+
+def dfs(grid: list, iter: int):
+    """
+    dfs로 Brick이 top인것
+    """
+
 
 T = int(input())
 for t in range(1, T+1):
     N, W, H = tuple(map(int, input().split()))
 
-    grid = [list(map(int, input().split())) for _ in range(H)]
-    print(N, W, H)
-    print(grid)
+    grid = [[Brick(0) for _ in range(H)] for _ in range(H)]
+    for r in range(H):
+        row = list(map(int, input().split()))
+        for c in range(W):
+            grid[r][c].value = row[c]
+            if grid[r-1][c].value == 0 and r >= 1 and grid[r][c].value != 0:
+                grid[r][c].top = True
+    
+    

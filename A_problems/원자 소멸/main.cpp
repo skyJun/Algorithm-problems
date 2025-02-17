@@ -18,8 +18,7 @@ struct collison {
 };
 
 bool compare(collison left, collison right){
-	if (left.t < right.t) return true;
-	if (left.t > right.t) return false;
+	return left.t < right.t;
 }
 
 // »óÇÏÁÂ¿ì

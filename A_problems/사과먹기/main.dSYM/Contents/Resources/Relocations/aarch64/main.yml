@@ -1,0 +1,5 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     "/Users/parkjunseo/Desktop/ssafy/algorithm_problem/A_problems/사과먹기/main"
+relocations:     []
+...

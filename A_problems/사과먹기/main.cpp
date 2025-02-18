@@ -1,19 +1,16 @@
-// »ç°ú ¸Ô±â °ÔÀÓ
-// N by N Å©±âÀÇ ¸Ê¿¡¼­ Ä³¸¯ÅÍ¸¦ ÀÌµ¿ÇÏ¿© »ç°ú¸¦ ¸Ô´Â °ÔÀÓ
-// 1¹øºÎÅÍ M¹ø »ç°ú±îÁö ¼ø¼­´ë·Î ¸Ô±â¸¸ ÇÏ¸é µÊ
-// ÇÃ·¹ÀÌ¾î´Â Ç×»ó (0, 0)¿¡¼­ ¿À¸¥ÂÊÀ» ÇâÇÑ »óÅÂ¿¡¼­ ½ÃÀÛ
-// ¿À¸¥ÂÊÀ¸·Î¸¸ È¸ÀüÀÌ °¡´É ¿À¸¥ÂÊÀ¸·Î È¸Àü ÈÄ ÀüÁø
-// ÃÖ¼Ò ¿ìÈ¸Àü È½¼ö
+// ì‚¬ê³¼ ë¨¹ê¸° ê²Œì„
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <deque>
+#include <array>
 
 using namespace std;
 
 int T;
 int N;
 
-// ½Ã°è¹æÇâ ¼ø Å½»ö 0->1->2->3->0 ¹İº¹
+// ì‹œê³„ë°©í–¥ ìˆœíšŒ 0->1->2->3->0 
 int dr[4] = { 0, 1, 0, -1 };
 int dc[4] = { 1, 0, -1, 0 };
 
@@ -39,61 +36,82 @@ int main() {
 				cin >> input_num;
 				if (input_num == 0) continue;
 
-				// 0ÀÌ ¾Æ´Ò¶§ °¡¾ßÇÒ ÁÂÇ¥¿Í ¼ıÀÚ
 				number_idx.push_back({ row_idx, col_idx, input_num });
 			}
 		}
 
-		// ¼ıÀÚ º°·Î Á¤·Ä
 		sort(number_idx.begin(), number_idx.end(), compare);
 
-		// Å½»ö ½ÃÀÛ ÃÊ±â°ª ¼³Á¤ 0,0 ¿À¸¥ÂÊ ¹æÇâ ÁøÇà
 		int start_r = 0;
 		int start_c = 0;
+
 		int direction_type = 0;
 		int total_turns = 0;
+		
+		vector<vector<vector<int>>> dist(N, vector<vector<int>>(N, vector<int>(4, 1e9)));
+		deque<array<int, 3>> que;
+		que.push_back({start_r, start_c, direction_type});
+		dist[start_r][start_c][direction_type] = 0;
 
 		for (int destination = 0; destination < number_idx.size(); destination++) {
 			int target_r = number_idx[destination].r;
 			int target_c = number_idx[destination].c;
 			
+			while(!que.empty()) {
+				auto [current_r, current_c, current_direction] = que.front();
+				que.pop_front();
+				int cost = dist[current_r][current_c][current_direction];
 
-			// ¸ñÇ¥±îÁöÀÇ Â÷ÀÌ
-			int dr = target_r - start_r;
-			int dc = target_c - start_c;
-			
-			int target_direction;
-			if (dr > 0) {
-				// ³²ÂÊÀ¸·Î °¡¾ßÇÔ
-				target_direction = 1;
-			}
-			else if (dr < 0) {
-				// ºÏÂÊÀ¸·Î °¡¾ßÇÔ
-				target_direction = 3;
-			}
-			else {
-				target_direction = (dc > 0) ? 0 : 2;
-			}
-			
-			
-			if (target_direction == 1 || target_direction == 3) {
-				if (dc != 0) {
-					target_direction = (target_direction + 3) % 4;
+				// ëª©ì ì§€ì— ë„ë‹¬í•˜ë©´ íƒˆì¶œ
+				if (current_r == target_r && current_c == target_c) break;
+
+				// 1 ì „ì§„ ë¹„ìš© 0
+				int nr = current_r + dr[current_direction];
+				int nc = current_c + dc[current_direction];
+
+				if (0 <= nr && nr < N && 0 <= nc && nc < N ) {
+					if(dist[nr][nc][current_direction] > cost) {
+						// í˜„ì¬ ì½”ìŠ¤íŠ¸ê°€ ë” ë‚®ìœ¼ë©´ ëŒ€ì…
+						dist[nr][nc][current_direction] = cost;
+						que.push_front({nr, nc, current_direction});
+					}
+				}
+
+				// 2 íšŒì „ ë¹„ìš© 1
+				int nd = (current_direction + 1) % 4;
+				nr = current_r + dr[nd];
+				nc = current_c + dc[nd];
+
+				if (0 <= nr && nr <N && 0 <= nc && nc <N ) {
+					if(dist[nr][nc][nd] > cost+1) {
+						// í˜„ì¬ ì½”ìŠ¤íŠ¸ê°€ ë” ë‚®ìœ¼ë©´ ëŒ€ì…
+						dist[nr][nc][nd] = cost+1;
+						que.push_back({nr, nc, nd});
+					}
 				}
 			}
 
-			// ÇÊ¿ä È¸Àü ¼ö °è»ê
-			int need_turns = (target_direction - direction_type + 4) % 4;
-			total_turns += need_turns;
+			int best = 1e9;
+			int best_direction;
 
-			// ¸ñÇ¥ µµ´Ş ÈÄ ¾÷µ¥ÀÌÆ®
+			for (int d=0; d<4; d++) {
+				if (dist[target_r][target_c][d] < best) {
+					best = dist[target_r][target_c][d];
+					best_direction = d;
+				}
+			}
+			total_turns += best;
+
+			// ì—…ë°ì´íŠ¸
 			start_r = target_r;
 			start_c = target_c;
-			direction_type = target_direction;
+			direction_type = best_direction;
+			dist.clear();
+			que.clear();
 		}
 	
-		cout << "#" << t << " " << direction_type;
-
+		cout << "#" << t << " " << total_turns;
+		number_idx.clear();
 	}
 
 

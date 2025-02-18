@@ -1,0 +1,21 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Lldb debug",
+      "program": "${fileDirname}/${fileBasenameNoExtension}",
+      "args": [],
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "lldb",
+      "request": "launch",
+      "args": [],
+      "cwd": "/Users/parkjunseo/Desktop/ssafy/algorithm_problem/A_problems/사과먹기",
+      "program": "/Users/parkjunseo/Desktop/ssafy/algorithm_problem/A_problems/사과먹기/build/Debug/outDebug"
+    }
+  ]
+}
